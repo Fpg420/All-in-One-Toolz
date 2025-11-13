@@ -1,12 +1,11 @@
 "use client";
+export const dynamic = "force-dynamic"; // prevent Next.js from prerendering this page
 
 import { useState } from "react";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile } from "@ffmpeg/util";
 import ToolPageTemplate from "@/components/ToolPageTemplate";
 
 export default function AudioConverter() {
-  const [ffmpeg] = useState(() => new FFmpeg());
+  const [ffmpeg, setFFmpeg] = useState(null);
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [outputUrl, setOutputUrl] = useState(null);
@@ -16,7 +15,16 @@ export default function AudioConverter() {
     if (!ready) {
       try {
         setLoading(true);
-        await ffmpeg.load();
+
+        // 🧠 dynamically import ffmpeg in browser only
+        const { FFmpeg } = await import("@ffmpeg/ffmpeg");
+        const { fetchFile } = await import("@ffmpeg/util");
+
+        const instance = new FFmpeg();
+        await instance.load();
+
+        // Save instance and helper function
+        setFFmpeg({ instance, fetchFile });
         setReady(true);
       } catch (err) {
         console.error("FFmpeg load error:", err);
@@ -29,29 +37,26 @@ export default function AudioConverter() {
 
   const handleConvert = async (event) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file || !ffmpeg) return;
 
     setError("");
     setOutputUrl(null);
     setLoading(true);
 
     try {
-      if (!ready) await loadFFmpeg();
+      const { instance, fetchFile } = ffmpeg;
 
       try {
-        await ffmpeg.deleteFile("input.wav");
-        await ffmpeg.deleteFile("output.mp3");
+        await instance.deleteFile("input.wav");
+        await instance.deleteFile("output.mp3");
       } catch {}
 
-      // Write input file
       const fileData = await fetchFile(file);
-      await ffmpeg.writeFile("input.wav", fileData);
+      await instance.writeFile("input.wav", fileData);
 
-      // Convert WAV/MP4/other audio to MP3
-      await ffmpeg.exec(["-i", "input.wav", "-acodec", "libmp3lame", "output.mp3"]);
+      await instance.exec(["-i", "input.wav", "-acodec", "libmp3lame", "output.mp3"]);
 
-      // Read and convert to URL
-      const data = await ffmpeg.readFile("output.mp3");
+      const data = await instance.readFile("output.mp3");
       const url = URL.createObjectURL(new Blob([data.buffer], { type: "audio/mpeg" }));
 
       setOutputUrl(url);

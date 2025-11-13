@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import ToolPageTemplate from "@/components/ToolPageTemplate";
-import * as pdfjsLib from "pdfjs-dist/build/pdf";
-import pdfWorker from "pdfjs-dist/build/pdf.worker.entry";
+import * as pdfjsLib from "pdfjs-dist";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+// Set workerSrc via CDN (best for Next.js + Vercel builds)
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 export default function PdfToWordConverter() {
   const [loading, setLoading] = useState(false);
