@@ -1,10 +1,16 @@
+// src/app/tools/converters/video-converter/page.js
 import dynamic from "next/dynamic";
+import React from "react";
+
+const VideoConverter = dynamic(() => import("./VideoConverterClient"), {
+  ssr: false,
+});
 
 export default function VideoConverterPage() {
-  const VideoConverter = dynamic(
-    () => import("./VideoConverterClient"),
-    { ssr: false }
+  return (
+    <main>
+      <h1>Video Converter page</h1>
+      <VideoConverter />
+    </main>
   );
-
-  return <VideoConverter />;
 }
