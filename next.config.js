@@ -1,8 +1,8 @@
-// next.config.mjs
+// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 };
 
-export default nextConfig; // ✅ use export default in .mjs
+module.exports = nextConfig; // ✅ works with .js
