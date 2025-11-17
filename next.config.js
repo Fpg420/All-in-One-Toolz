@@ -5,4 +5,4 @@ const nextConfig = {
   swcMinify: true,
 };
 
-module.exports = nextConfig; // ✅ works with .js
+module.exports = nextConfig; // ✅ works in Node and Vercel
