@@ -1,12 +1,11 @@
 // src/app/tools/calculators/age-calculator/page.js
-import dynamic from "next/dynamic";
-
 export const metadata = {
   title: "Age Calculator — All-in-One Toolz",
   description: "Calculate age in years, months and days from a birth date. Fast, private, and easy to use.",
 };
 
-const AgeCalculatorClient = dynamic(() => import("./AgeCalculatorClient"), { ssr: false });
+// Import client component directly (AgeCalculatorClient must contain "use client")
+import AgeCalculatorClient from "./AgeCalculatorClient";
 
 export default function AgeCalculatorPage() {
   return (
