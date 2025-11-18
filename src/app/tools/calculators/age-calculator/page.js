@@ -1,51 +1,45 @@
-"use client";
-import ToolPageTemplate from "@/components/ToolPageTemplate";
-import { useState } from "react";
+// src/app/tools/calculators/age-calculator/page.js
+import dynamic from "next/dynamic";
 
-export default function AgeCalculator() {
-  const [birthDate, setBirthDate] = useState("");
-  const [age, setAge] = useState(null);
+export const metadata = {
+  title: "Age Calculator — All-in-One Toolz",
+  description: "Calculate age in years, months and days from a birth date. Fast, private, and easy to use.",
+};
 
-  const calculateAge = () => {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let years = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      years--;
-    }
-    setAge(years);
-  };
+const AgeCalculatorClient = dynamic(() => import("./AgeCalculatorClient"), { ssr: false });
 
+export default function AgeCalculatorPage() {
   return (
-    <ToolPageTemplate
-      title="Age Calculator"
-      description="Find out your age in years based on your birth date."
-    >
-      <div className="space-y-4">
-        <div>
-          <label>Date of Birth:</label>
-          <input
-            type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            className="w-full p-2 rounded bg-gray-900 border border-gray-700"
-          />
-        </div>
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 py-12 px-6">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold mb-3 text-blue-400">Age Calculator</h1>
 
-        <button
-          onClick={calculateAge}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-        >
-          Calculate Age
-        </button>
+        <p className="text-gray-300 mb-6">
+          Quickly compute someone's age (years, months and days) from their date of birth.
+          This tool is helpful for age verification, milestone planning, or just curiosity.
+          All calculations run in your browser — no personal data is sent to our servers.
+        </p>
 
-        {age !== null && (
-          <p className="mt-4 text-lg">
-            You are <span className="font-semibold">{age}</span> years old.
+        {/* Client-side interactive calculator */}
+        <AgeCalculatorClient />
+
+        {/* SEO and helpful content for AdSense & discoverability */}
+        <section className="mt-8 text-gray-400">
+          <h2 className="text-xl font-semibold mb-2">How the Age Calculator works</h2>
+          <p className="mb-2">
+            Enter a birth date and (optionally) a reference date to calculate the exact age in
+            years, months, and days. If no reference date is provided, today’s date is used.
+            The calculation accounts for months of different lengths and leap years.
           </p>
-        )}
+
+          <h3 className="text-sm font-semibold mt-4 mb-1">Privacy & usage</h3>
+          <p className="text-sm">
+            We do not store the dates you enter. All computations are performed locally in your
+            browser for privacy. If you need to calculate ages in bulk or integrate this into a
+            form, consider server-side processing with proper data handling.
+          </p>
+        </section>
       </div>
-    </ToolPageTemplate>
+    </main>
   );
 }
