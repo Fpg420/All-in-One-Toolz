@@ -1,7 +1,10 @@
-"use client";
+// src/app/page.jsx
+export const metadata = {
+  title: "All-in-One Toolz",
+  description: "Smart, fast and secure online tools — converters, downloaders and more.",
+};
 
-import Link from "next/link";
-import { useState } from "react";
+import ToolGrid from "../components/ToolGrid";
 
 const categories = [
   {
@@ -72,15 +75,6 @@ const categories = [
 ];
 
 export default function Home() {
-  const [search, setSearch] = useState("");
-
-  const filteredCategories = categories.map((cat) => ({
-    ...cat,
-    tools: cat.tools.filter((tool) =>
-      tool.name.toLowerCase().includes(search.toLowerCase())
-    ),
-  }));
-
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 py-12 px-6">
       <div className="max-w-6xl mx-auto text-center">
@@ -88,40 +82,28 @@ export default function Home() {
         <p className="text-gray-300 mb-8">
           Smart, fast and secure online tools — all in one place.
         </p>
-        <input
-          type="text"
-          placeholder="Search tools..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="p-3 rounded-lg text-gray-900 w-80 mb-10"
-        />
+      </div>
 
-        {filteredCategories.map(
-          (category) =>
-            category.tools.length > 0 && (
-              <div key={category.name} className="mb-12">
-                <h2 className="text-2xl font-semibold mb-6 text-blue-300">
-                  {category.name}
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {category.tools.map((tool) => (
-                    <Link
-                      key={tool.path}
-                      href={tool.path}
-                      className="p-5 rounded-2xl bg-gray-800 hover:bg-gray-700 transition shadow-lg border border-gray-700"
-                    >
-                      <h3 className="text-lg font-semibold text-gray-100">
-                        {tool.name}
-                      </h3>
-                      <p className="text-gray-400 text-sm mt-2">
-                        Click to use the {tool.name}.
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )
-        )}
+      {/* MAIN CONTENT + GRID */}
+      <div className="max-w-6xl mx-auto">
+        {/* interactive search + grid (client component) */}
+        <ToolGrid initialCategories={categories} />
+
+        {/* SEO / informational content block for AdSense & quality checks */}
+        <section className="container mx-auto py-8 max-w-4xl text-gray-200">
+          <h2 className="text-2xl font-bold mb-3">About All-in-One Toolz</h2>
+          <p className="mb-4">
+            All-in-One Toolz is a collection of fast, free, and secure online utilities designed to
+            help you complete common tasks instantly — no installs, no logins. From converters
+            (image, audio, video, PDF) to everyday calculators (BMI, age, percentage) and developer
+            helpers (base64, JSON formatter), every tool was built to be easy to use on desktop and mobile.
+          </p>
+          <p>
+            We focus on privacy and speed: many tools run directly in your browser and do not require
+            personal accounts. We also provide clear information and support — use the Contact page
+            if you need help or want to suggest a new feature.
+          </p>
+        </section>
       </div>
     </main>
   );
