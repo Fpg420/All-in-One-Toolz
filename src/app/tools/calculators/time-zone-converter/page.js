@@ -1,34 +1,40 @@
-"use client";
-import { useState } from "react";
-import ToolPageTemplate from "@/components/ToolPageTemplate";
+// src/app/tools/converters/timezone-converter/page.js
+export const metadata = {
+  title: "Time Zone Converter — All-in-One Toolz",
+  description:
+    "Convert time between time zones. Choose a date and time, pick source and target zones (e.g. UTC, Asia/Karachi, America/New_York) and get the exact converted time.",
+};
 
-export default function TimeZoneConverter() {
-  const [time, setTime] = useState("");
-  const [from, setFrom] = useState("UTC");
-  const [to, setTo] = useState("Asia/Karachi");
-  const [converted, setConverted] = useState("");
+import TimeZoneConverterClient from "./TimeZoneConverterClient";
 
-  const convertTime = () => {
-    if (!time) return;
-    const date = new Date(`1970-01-01T${time}:00Z`);
-    const convertedTime = date.toLocaleTimeString("en-US", { timeZone: to });
-    setConverted(convertedTime);
-  };
-
+export default function TimeZoneConverterPage() {
   return (
-    <ToolPageTemplate title="Time Zone Converter" description="Convert time between different time zones.">
-      <div className="tool-box">
-        <input type="time" value={time} onChange={(e) => setTime(e.target.value)} className="input" />
-        <select value={to} onChange={(e) => setTo(e.target.value)} className="input">
-          <option value="Asia/Karachi">Asia/Karachi</option>
-          <option value="America/New_York">America/New York</option>
-          <option value="Europe/London">Europe/London</option>
-          <option value="Asia/Dubai">Asia/Dubai</option>
-          <option value="Asia/Tokyo">Asia/Tokyo</option>
-        </select>
-        <button onClick={convertTime} className="btn">Convert</button>
-        {converted && <p className="result">Converted Time: {converted}</p>}
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 py-12 px-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-3 text-blue-400">Time Zone Converter</h1>
+
+        <p className="text-gray-300 mb-6">
+          Convert a date and time between world time zones. Choose a date and wall-clock time in a
+          source time zone, then select a target time zone to see the exact corresponding local time.
+          This tool accounts for daylight saving where applicable.
+        </p>
+
+        <TimeZoneConverterClient />
+
+        <section className="mt-8 text-gray-400">
+          <h2 className="text-xl font-semibold mb-2">How it works</h2>
+          <p className="mb-2">
+            The converter builds an exact instant from your chosen date/time in the source time zone
+            and formats that instant into the target time zone. This method accounts for DST and
+            historical offsets using the browser's <code>Intl</code> capabilities.
+          </p>
+          <h3 className="text-sm font-semibold mt-4 mb-1">Privacy</h3>
+          <p className="text-sm">
+            All calculations are done in your browser — nothing is uploaded to our servers.
+            Use this tool offline for private conversions.
+          </p>
+        </section>
       </div>
-    </ToolPageTemplate>
+    </main>
   );
 }
