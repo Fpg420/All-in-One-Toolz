@@ -1,69 +1,41 @@
-"use client";
-import { useState } from "react";
+// src/app/tools/converters/image-converter/page.js
+export const metadata = {
+  title: "Image Converter — PNG / JPG / WebP (Client-side)",
+  description:
+    "Convert images between PNG, JPG and WebP directly in your browser. Resize, choose quality, preview and download — private and fast (no uploads).",
+};
 
-export default function ImageConverter() {
-  const [file, setFile] = useState(null);
-  const [format, setFormat] = useState("png");
-  const [convertedURL, setConvertedURL] = useState(null);
+import ImageConverterClient from "./ImageConverterClient";
 
-  const handleConvert = async () => {
-    if (!file) return alert("Please upload an image first.");
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0);
-      canvas.toBlob(
-        (blob) => {
-          const url = URL.createObjectURL(blob);
-          setConvertedURL(url);
-        },
-        `image/${format}`,
-        1.0
-      );
-    };
-  };
-
+export default function ImageConverterPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white flex flex-col items-center justify-center px-4">
-      <h1 className="text-3xl font-bold text-blue-400 mb-6">🖼️ Image Converter</h1>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setFile(e.target.files[0])}
-        className="bg-gray-900 border border-gray-700 p-3 rounded-lg mb-3"
-      />
-      <select
-        value={format}
-        onChange={(e) => setFormat(e.target.value)}
-        className="bg-gray-900 border border-gray-700 p-2 rounded-lg mb-4"
-      >
-        <option value="png">PNG</option>
-        <option value="jpeg">JPG</option>
-        <option value="webp">WEBP</option>
-      </select>
-      <button
-        onClick={handleConvert}
-        className="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-semibold"
-      >
-        Convert
-      </button>
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 py-12 px-6">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4 text-blue-400">Image Converter</h1>
 
-      {convertedURL && (
-        <div className="mt-6 text-center">
-          <p className="mb-2">✅ Conversion Successful!</p>
-          <a
-            href={convertedURL}
-            download={`converted.${format}`}
-            className="text-blue-400 underline"
-          >
-            Download {format.toUpperCase()} File
-          </a>
-        </div>
-      )}
+        <p className="text-gray-300 mb-6">
+          Convert images between PNG, JPG and WebP right in your browser. Choose output format,
+          adjust quality (for JPG/WebP), resize dimensions, preview the result, then download.
+          Nothing is uploaded — all processing happens locally for privacy.
+        </p>
+
+        <ImageConverterClient />
+
+        <section className="mt-8 text-gray-400">
+          <h2 className="text-xl font-semibold mb-2">Why use this tool?</h2>
+          <ul className="list-disc ml-6">
+            <li>Fast client-side conversion — no uploads</li>
+            <li>Resize images while keeping aspect ratio</li>
+            <li>Control quality for smaller files (JPG / WebP)</li>
+            <li>Preview and download the converted file</li>
+          </ul>
+
+          <p className="mt-4 text-sm">
+            Handy for optimizing images for web, converting screenshots, or creating WebP versions for faster sites.
+            If you need batch conversion or server-side processing, consider a separate workflow.
+          </p>
+        </section>
+      </div>
     </main>
   );
 }
