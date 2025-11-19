@@ -1,33 +1,51 @@
-"use client";
-import { useState } from "react";
-import ToolPageTemplate from "@/components/ToolPageTemplate";
+// src/app/tools/calculators/loan-calculator/page.js
 
-export default function LoanCalculator() {
-  const [amount, setAmount] = useState("");
-  const [rate, setRate] = useState("");
-  const [years, setYears] = useState("");
-  const [emi, setEmi] = useState(null);
+export const metadata = {
+  title: "Loan & EMI Calculator — Monthly Payment, Interest & Total Cost",
+  description:
+    "Free Loan & EMI Calculator. Calculate monthly EMI, total interest, and total payable amount for home loans, car loans, personal loans, and more. Fast and accurate.",
+};
 
-  const calculateEMI = () => {
-    const p = parseFloat(amount);
-    const r = parseFloat(rate) / 12 / 100;
-    const n = parseFloat(years) * 12;
-    if (!p || !r || !n) return;
-    const e = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    setEmi(e.toFixed(2));
-  };
+import LoanCalculatorClient from "./LoanCalculatorClient";
 
+export default function LoanCalculatorPage() {
   return (
-    <ToolPageTemplate title="Loan / EMI Calculator" description="Find your monthly loan installment.">
-      <div className="bg-gray-800/50 p-6 rounded-xl max-w-md mx-auto">
-        <div className="space-y-3">
-          <input placeholder="Loan Amount" type="number" value={amount} onChange={(e)=>setAmount(e.target.value)} className="w-full p-2 rounded bg-gray-900 border border-gray-700 text-white"/>
-          <input placeholder="Annual Interest Rate (%)" type="number" value={rate} onChange={(e)=>setRate(e.target.value)} className="w-full p-2 rounded bg-gray-900 border border-gray-700 text-white"/>
-          <input placeholder="Loan Tenure (Years)" type="number" value={years} onChange={(e)=>setYears(e.target.value)} className="w-full p-2 rounded bg-gray-900 border border-gray-700 text-white"/>
-          <button onClick={calculateEMI} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">Calculate EMI</button>
-        </div>
-        {emi && <div className="mt-4 text-center text-lg">Monthly EMI: <span className="text-blue-400 font-bold">₹{emi}</span></div>}
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-gray-100 py-12 px-6">
+      <div className="max-w-3xl mx-auto">
+
+        <h1 className="text-3xl font-bold mb-4 text-blue-400">Loan & EMI Calculator</h1>
+
+        <p className="text-gray-300 mb-8">
+          Easily calculate your EMI (Equated Monthly Installment) based on loan amount, annual
+          interest rate, and loan tenure in years. This free tool also shows your total interest
+          payable and total amount payable over the entire loan period.
+        </p>
+
+        <LoanCalculatorClient />
+
+        <section className="mt-10 text-gray-400">
+          <h2 className="text-xl font-semibold mb-2">How EMI is calculated</h2>
+          <p className="mb-3">
+            EMI is calculated using the standard formula:
+          </p>
+          <code className="block bg-gray-900 p-3 rounded border border-gray-700 text-sm">
+            EMI = P × r × (1 + r)<sup>n</sup> / ((1 + r)<sup>n</sup> − 1)
+          </code>
+
+          <p className="mt-4">
+            Where P = loan amount, r = monthly interest rate, and n = total months.
+          </p>
+
+          <h3 className="text-lg mt-6 font-semibold">Examples</h3>
+          <p>• ₹1,00,000 at 10% for 1 year → EMI ≈ ₹8,791</p>
+          <p>• $10,000 at 5% for 3 years → EMI ≈ $299.71</p>
+
+          <p className="mt-4 text-sm">
+            This page is SEO-optimized for finance and loan-related search queries.
+          </p>
+        </section>
+
       </div>
-    </ToolPageTemplate>
+    </main>
   );
 }
